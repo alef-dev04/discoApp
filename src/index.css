@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-neon-purple: 217, 70, 239;
+    --color-neon-magenta: 233, 30, 99;
+    --color-neon-blue: 0, 188, 212;
+  }
+  
+  body {
+    @apply bg-dark-bg text-white font-sans overflow-hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/10;
+  }
+  
+  .glass-card {
+    @apply bg-dark-surface/80 backdrop-blur-lg border border-white/5 shadow-xl;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  .box-glow-purple {
+    box-shadow: 0 0 20px -5px rgba(217, 70, 239, 0.5);
+  }
+  
+  .box-glow-blue {
+    box-shadow: 0 0 20px -5px rgba(0, 188, 212, 0.5);
+  }
+}
