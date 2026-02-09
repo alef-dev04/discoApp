@@ -29,14 +29,14 @@ const DateSelector = () => {
     const minDate = new Date().toISOString().split('T')[0];
 
     return (
-        <div className="flex items-center gap-4 bg-white/5 p-2 rounded-xl border border-white/10 backdrop-blur-md">
-            <span className="text-white font-medium text-sm md:text-base pl-2">📅 Date:</span>
+        <div className="flex items-center gap-1 md:gap-3 bg-white/5 p-1.5 md:p-2 rounded-lg md:rounded-xl border border-white/10 backdrop-blur-md">
+            <span className="text-white font-medium text-xs md:text-base pl-1 md:pl-2">📅</span>
             <input
                 type="date"
                 value={dateValue}
                 min={minDate}
                 onChange={handleChange}
-                className="bg-transparent text-white border-0 px-2 py-1 focus:outline-none focus:ring-0 cursor-pointer font-bold text-sm md:text-base [color-scheme:dark]"
+                className="bg-transparent text-white border-0 px-1 md:px-2 py-0.5 md:py-1 focus:outline-none focus:ring-0 cursor-pointer font-bold text-xs md:text-base [color-scheme:dark] w-[110px] md:w-auto"
             />
         </div>
     );

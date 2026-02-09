@@ -38,8 +38,8 @@ const FloorPlan = ({ tables, onTableClick, isUserView = true, isEditing = false,
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-neon-purple/5 rounded-full blur-[100px]" />
 
             {/* Stage / DJ Area Indicator */}
-            <div className="absolute top-5 left-1/2 -translate-x-1/2 w-48 h-12 bg-white/5 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm">
-                <span className="text-xs tracking-[0.5em] text-neon-blue font-bold">DJ BOOTH</span>
+            <div className="absolute top-2 md:top-5 left-1/2 -translate-x-1/2 w-28 h-8 md:w-48 md:h-12 bg-white/5 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm">
+                <span className="text-[8px] md:text-xs tracking-[0.3em] md:tracking-[0.5em] text-neon-blue font-bold">DJ BOOTH</span>
             </div>
 
             {/* Tables Layer */}
@@ -57,32 +57,32 @@ const FloorPlan = ({ tables, onTableClick, isUserView = true, isEditing = false,
                 ))}
             </div>
 
-            {/* Legend (Bottom Right) */}
-            <div className="absolute bottom-5 right-5 glass px-4 py-3 rounded-xl flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500 box-glow-green" />
-                    <span className="text-[10px] uppercase text-gray-400">Available</span>
+            {/* Legend (Bottom Left on mobile, Bottom Right on desktop) */}
+            <div className="absolute bottom-2 left-2 md:bottom-5 md:left-auto md:right-5 glass px-2 py-2 md:px-4 md:py-3 rounded-lg md:rounded-xl flex flex-col gap-1.5 md:gap-2">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500/20 border border-green-500 box-glow-green" />
+                    <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Available</span>
                 </div>
-                <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-900/40 border border-red-500" />
-                    <span className="text-[10px] uppercase text-gray-400">Occupied</span>
+                <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-900/40 border border-red-500" />
+                    <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Occupied</span>
                 </div>
                 {isUserView ? (
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-neon-purple/20 border border-neon-purple box-glow-purple" />
-                        <span className="text-[10px] uppercase text-gray-400">Your Table</span>
+                    <div className="flex items-center gap-1.5 md:gap-2">
+                        <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-neon-purple/20 border border-neon-purple box-glow-purple" />
+                        <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Your Table</span>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-orange-500/20 border border-orange-500" />
-                        <span className="text-[10px] uppercase text-gray-400">Partially Full</span>
+                    <div className="flex items-center gap-1.5 md:gap-2">
+                        <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-orange-500/20 border border-orange-500" />
+                        <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Partially Full</span>
                     </div>
                 )}
             </div>
 
             {/* Edit Mode Indicator */}
             {isEditing && (
-                <div className="absolute top-5 right-5 bg-yellow-500/10 border border-yellow-500 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold animate-pulse">
+                <div className="absolute top-2 right-2 md:top-5 md:right-5 bg-yellow-500/10 border border-yellow-500 text-yellow-500 px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold animate-pulse">
                     EDITING MODE
                 </div>
             )}

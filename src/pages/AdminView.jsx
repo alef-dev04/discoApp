@@ -61,73 +61,79 @@ const AdminView = () => {
     return (
         <div className="h-screen flex flex-col bg-dark-bg text-white overflow-hidden relative">
             {/* Admin Header */}
-            <header className="h-auto md:h-24 glass z-20 px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
+            <header className="h-auto glass z-20 px-3 md:px-8 py-2 md:py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4">
+                <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
                     <div>
-                        <h1 className="text-xl font-bold tracking-widest text-neon-blue">ADMIN<span className="text-white">DASHBOARD</span></h1>
+                        <h1 className="text-base md:text-xl font-bold tracking-widest text-neon-blue">ADMIN<span className="text-white">DASHBOARD</span></h1>
                     </div>
                 </div>
 
-                {!isEditing && (
-                    <div className="z-30">
-                        <DateSelector />
-                    </div>
-                )}
-
-                {/* Controls & Stats */}
-                <div className="flex items-center gap-4">
-                    {/* Edit Mode Controls */}
-                    <div className="flex items-center gap-2">
-                        {isEditing && (
-                            <button
-                                onClick={handleAddTable}
-                                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-neon-blue/20 border border-neon-blue/50 text-neon-blue hover:bg-neon-blue/30 transition-all font-bold text-sm"
-                            >
-                                <Plus size={16} /> Add Table
-                            </button>
-                        )}
-                        <button
-                            onClick={() => setIsEditing(!isEditing)}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition-all text-sm ${isEditing ? 'bg-yellow-500 text-black border-yellow-500 font-bold' : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'}`}
-                        >
-                            {isEditing ? <Save size={16} /> : <Edit size={16} />}
-                            {isEditing ? 'Done' : 'Edit Layout'}
-                        </button>
-                    </div>
-
-                    {/* Quick Stats (Hide in Edit Mode to save space or just keep) */}
+                <div className="flex items-center justify-between w-full md:w-auto gap-2 md:gap-4">
                     {!isEditing && (
-                        <div className="hidden lg:flex bg-dark-deep rounded-xl border border-white/5 p-2 gap-4 md:gap-8 overflow-x-auto w-full md:w-auto">
-                            <div className="px-2">
-                                <p className="text-[10px] text-gray-400 uppercase">Revenue</p>
-                                <div className="flex items-center gap-1 text-neon-blue font-bold">
-                                    <DollarSign size={14} /> {stats.totalRevenue.toLocaleString()}
-                                </div>
-                            </div>
-
-                            <div className="w-px bg-white/10 h-8 self-center" />
-
-                            <div className="px-2">
-                                <p className="text-[10px] text-gray-400 uppercase">Occupancy</p>
-                                <div className="flex items-center gap-1 text-neon-magenta font-bold">
-                                    <Activity size={14} /> {stats.occupancyRate}%
-                                </div>
-                            </div>
-
-                            <div className="w-px bg-white/10 h-8 self-center" />
-
-                            <div className="px-2">
-                                <p className="text-[10px] text-gray-400 uppercase">Tables</p>
-                                <div className="flex items-center gap-1 text-neon-purple font-bold">
-                                    <Users size={14} /> {stats.occupiedTables}/{tables.length}
-                                </div>
-                            </div>
+                        <div className="z-30">
+                            <DateSelector />
                         </div>
                     )}
 
-                    <button onClick={logout} className="ml-2 p-2 bg-white/5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
-                        <LogOut size={18} />
-                    </button>
+                    {/* Controls & Stats */}
+                    <div className="flex items-center gap-2 md:gap-4">
+                        {/* Edit Mode Controls */}
+                        <div className="flex items-center gap-1 md:gap-2">
+                            {isEditing && (
+                                <button
+                                    onClick={handleAddTable}
+                                    className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-neon-blue/20 border border-neon-blue/50 text-neon-blue hover:bg-neon-blue/30 transition-all font-bold text-xs md:text-sm"
+                                >
+                                    <Plus size={14} className="md:hidden" />
+                                    <Plus size={16} className="hidden md:block" />
+                                    <span className="hidden sm:inline">Add Table</span>
+                                </button>
+                            )}
+                            <button
+                                onClick={() => setIsEditing(!isEditing)}
+                                className={`flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl border transition-all text-xs md:text-sm ${isEditing ? 'bg-yellow-500 text-black border-yellow-500 font-bold' : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'}`}
+                            >
+                                {isEditing ? <Save size={14} className="md:hidden" /> : <Edit size={14} className="md:hidden" />}
+                                {isEditing ? <Save size={16} className="hidden md:block" /> : <Edit size={16} className="hidden md:block" />}
+                                <span className="hidden sm:inline">{isEditing ? 'Done' : 'Edit Layout'}</span>
+                            </button>
+                        </div>
+
+                        {/* Quick Stats (Hide on mobile and in Edit Mode) */}
+                        {!isEditing && (
+                            <div className="hidden lg:flex bg-dark-deep rounded-xl border border-white/5 p-2 gap-4 md:gap-8 overflow-x-auto">
+                                <div className="px-2">
+                                    <p className="text-[10px] text-gray-400 uppercase">Revenue</p>
+                                    <div className="flex items-center gap-1 text-neon-blue font-bold">
+                                        <DollarSign size={14} /> {stats.totalRevenue.toLocaleString()}
+                                    </div>
+                                </div>
+
+                                <div className="w-px bg-white/10 h-8 self-center" />
+
+                                <div className="px-2">
+                                    <p className="text-[10px] text-gray-400 uppercase">Occupancy</p>
+                                    <div className="flex items-center gap-1 text-neon-magenta font-bold">
+                                        <Activity size={14} /> {stats.occupancyRate}%
+                                    </div>
+                                </div>
+
+                                <div className="w-px bg-white/10 h-8 self-center" />
+
+                                <div className="px-2">
+                                    <p className="text-[10px] text-gray-400 uppercase">Tables</p>
+                                    <div className="flex items-center gap-1 text-neon-purple font-bold">
+                                        <Users size={14} /> {stats.occupiedTables}/{tables.length}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <button onClick={logout} className="p-1.5 md:p-2 bg-white/5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
+                            <LogOut size={16} className="md:hidden" />
+                            <LogOut size={18} className="hidden md:block" />
+                        </button>
+                    </div>
                 </div>
             </header>
 
