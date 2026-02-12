@@ -4,12 +4,14 @@ import FloorPlan from '../components/floorplan/FloorPlan';
 import AdminTableModal from '../components/modals/AdminTableModal';
 import EditTableModal from '../components/modals/EditTableModal';
 import DateSelector from '../components/common/DateSelector';
-import { LogOut, Users, DollarSign, Activity, Edit, Plus, Save } from 'lucide-react';
+import ReportModal from '../components/modals/ReportModal';
+import { LogOut, Users, DollarSign, Activity, Edit, Plus, Save, FileText } from 'lucide-react';
 
 const AdminView = () => {
-    const { tables, logout, addOrder, cancelBooking, updateBooking, updateTable, addTable, deleteTable, updateTablePosition } = useAppContext();
+    const { tables, logout, addOrder, cancelBooking, updateBooking, updateTable, addTable, deleteTable, updateTablePosition, generateReport } = useAppContext();
     const [selectedTableId, setSelectedTableId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [isReportOpen, setIsReportOpen] = useState(false);
 
     const activeTable = useMemo(() => {
         return tables.find(t => t.id === selectedTableId) || null;
@@ -77,6 +79,18 @@ const AdminView = () => {
 
                     {/* Controls & Stats */}
                     <div className="flex items-center gap-2 md:gap-4">
+                        {/* Generate Report Button */}
+                        {!isEditing && (
+                            <button
+                                onClick={() => setIsReportOpen(true)}
+                                className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl bg-neon-purple/20 border border-neon-purple/50 text-neon-purple hover:bg-neon-purple/30 transition-all font-bold text-xs md:text-sm"
+                            >
+                                <FileText size={14} className="md:hidden" />
+                                <FileText size={16} className="hidden md:block" />
+                                <span className="hidden sm:inline">Report</span>
+                            </button>
+                        )}
+
                         {/* Edit Mode Controls */}
                         <div className="flex items-center gap-1 md:gap-2">
                             {isEditing && (
@@ -169,6 +183,13 @@ const AdminView = () => {
                     onUpdateBooking={updateBooking}
                 />
             )}
+
+            {/* Report Modal */}
+            <ReportModal
+                isOpen={isReportOpen}
+                onClose={() => setIsReportOpen(false)}
+                generateReport={generateReport}
+            />
         </div>
     );
 };

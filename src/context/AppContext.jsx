@@ -341,6 +341,47 @@ export const AppProvider = ({ children }) => {
         setTables(prev => prev.filter(t => t.id !== id));
     };
 
+    const generateReport = async (date) => {
+        const dateStr = formatDateForDB(date);
+
+        // Fetch all bookings for the selected date
+        const { data: bookings, error } = await supabase
+            .from('bookings')
+            .select('*, tables(name, section)')
+            .eq('booking_date', dateStr);
+
+        if (error) {
+            console.error('Error fetching report data:', error);
+            return { tables: [], totalGuests: 0, totalArrived: 0 };
+        }
+
+        // Process bookings to calculate statistics
+        const tableStats = bookings.map(booking => {
+            const guestsTotal = booking.guest_count || 0;
+            const guestsArrived = booking.guest_list
+                ? booking.guest_list.filter(g => g.arrived).length
+                : 0;
+
+            return {
+                id: booking.table_id,
+                name: booking.tables?.name || `Table ${booking.table_id}`,
+                section: booking.tables?.section || 'Unknown',
+                bookingName: booking.booking_name,
+                guestsTotal,
+                guestsArrived
+            };
+        });
+
+        const totalGuests = tableStats.reduce((sum, t) => sum + t.guestsTotal, 0);
+        const totalArrived = tableStats.reduce((sum, t) => sum + t.guestsArrived, 0);
+
+        return {
+            tables: tableStats,
+            totalGuests,
+            totalArrived
+        };
+    };
+
     const addOrder = (tableId, amount) => {
         // ... (existing mock logic or update DB later)
         setTables(prev => prev.map(t => {
@@ -374,6 +415,7 @@ export const AppProvider = ({ children }) => {
             addTable,
             deleteTable,
             addOrder,
+            generateReport,
             selectedDate,
             setSelectedDate
         }}>
