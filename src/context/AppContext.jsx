@@ -406,7 +406,6 @@ export const AppProvider = ({ children }) => {
             currentUserBooking, // Kept for legacy/quick check if current user has booking on selected date
             bookTable,
             fetchUserBookings,
-            fetchUserBookings,
             cancelBooking,
             updateBooking,
             updateTableStatus,
