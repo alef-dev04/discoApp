@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Users, TrendingUp, Download, CheckCircle, XCircle } from 'lucide-react';
+import { X, Calendar, Users, TrendingUp, Download, CheckCircle, XCircle, FileDown } from 'lucide-react';
+import ReportCharts from './ReportCharts';
+import { exportToPDF, exportToCSV } from '../../utils/reportExport';
 
 const ReportModal = ({ isOpen, onClose, generateReport }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -130,6 +132,11 @@ const ReportModal = ({ isOpen, onClose, generateReport }) => {
                                     </div>
                                 </div>
 
+                                {/* Charts */}
+                                {reportData && reportData.tables.length > 0 && (
+                                    <ReportCharts reportData={reportData} />
+                                )}
+
                                 {/* Tables List */}
                                 <div>
                                     <h3 className="text-sm font-bold text-gray-300 mb-3 uppercase tracking-wide flex items-center gap-2">
@@ -202,6 +209,24 @@ const ReportModal = ({ isOpen, onClose, generateReport }) => {
 
                     {/* Footer Actions */}
                     <div className="p-6 border-t border-white/5 bg-white/5 shrink-0">
+                        <div className="flex gap-3 mb-3">
+                            <button
+                                onClick={() => exportToPDF(reportData, selectedDate)}
+                                disabled={!reportData || reportData.tables.length === 0}
+                                className="flex-1 py-3 bg-gradient-to-r from-neon-purple to-neon-blue text-white rounded-xl font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <Download size={18} />
+                                Download PDF
+                            </button>
+                            <button
+                                onClick={() => exportToCSV(reportData, selectedDate)}
+                                disabled={!reportData || reportData.tables.length === 0}
+                                className="flex-1 py-3 bg-white/5 border border-neon-blue/50 text-neon-blue rounded-xl font-bold hover:bg-white/10 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <FileDown size={18} />
+                                Download CSV
+                            </button>
+                        </div>
                         <button
                             onClick={onClose}
                             className="w-full py-3 bg-neon-purple/20 border border-neon-purple/50 text-neon-purple rounded-xl font-bold hover:bg-neon-purple/30 transition-colors"
