@@ -79,6 +79,14 @@ const Table = ({ data, onClick, isUserView, isEditing, onDragEnd }) => {
                 )}
             </div>
 
+            {/* Admin Booking Name Underneath */}
+            {!isUserView && !isEditing && status !== 'available' && data.bookings?.length > 0 && (
+                <div className="absolute -bottom-6 w-max left-1/2 -translate-x-1/2 text-center pointer-events-none z-10 transition-all">
+                    <div className="text-[10px] font-bold text-white bg-dark-bg/90 px-2 py-0.5 rounded border border-white/10 shadow-lg backdrop-blur-sm truncate max-w-[100px]">
+                        {data.bookings[0].booking_name || 'VIP Booking'}
+                    </div>
+                </div>
+            )}
 
         </motion.div>
     );

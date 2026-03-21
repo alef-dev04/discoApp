@@ -9,8 +9,7 @@ const BookingModal = ({ isOpen, onClose, table, onConfirm }) => {
     const { selectedDate } = useAppContext(); // Get date from context
     const [bookingName, setBookingName] = useState('');
     const [guestList, setGuestList] = useState([]);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [bulkGuestsText, setBulkGuestsText] = useState('');
     const [error, setError] = useState('');
 
     // Format date for display
@@ -20,18 +19,29 @@ const BookingModal = ({ isOpen, onClose, table, onConfirm }) => {
         if (table) {
             setBookingName('');
             setGuestList([]);
-            setFirstName('');
-            setLastName('');
+            setBulkGuestsText('');
             setError('');
         }
     }, [table]);
 
-    const addGuest = () => {
-        if (!firstName.trim() || !lastName.trim()) return;
-        // Capacity check removed
-        setGuestList([...guestList, { firstName, lastName, id: Date.now() }]);
-        setFirstName('');
-        setLastName('');
+    const handleAddBulk = () => {
+        if (!bulkGuestsText.trim()) return;
+        
+        const lines = bulkGuestsText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        
+        const newGuests = lines.map((line, index) => {
+            const parts = line.split(' ');
+            const firstName = parts[0];
+            const lastName = parts.slice(1).join(' ');
+            return {
+                id: Date.now().toString() + '-' + index,
+                firstName: firstName,
+                lastName: lastName || ''
+            };
+        });
+
+        setGuestList([...guestList, ...newGuests]);
+        setBulkGuestsText('');
         setError('');
     };
 
@@ -95,29 +105,20 @@ const BookingModal = ({ isOpen, onClose, table, onConfirm }) => {
                         <div className="bg-dark-bg p-4 rounded-xl border border-white/5 space-y-3">
                             <div className="flex items-center gap-2 text-gray-300 font-medium mb-1">
                                 <User size={16} />
-                                <span>Add Guest</span>
+                                <span>Add Guests</span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2">
-                                <input
-                                    type="text"
-                                    placeholder="First Name"
-                                    value={firstName}
-                                    onChange={e => setFirstName(e.target.value)}
-                                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-neon-purple transition-colors"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Last Name"
-                                    value={lastName}
-                                    onChange={e => setLastName(e.target.value)}
-                                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-neon-purple transition-colors"
-                                    onKeyDown={e => e.key === 'Enter' && addGuest()}
-                                />
-                            </div>
+                            <textarea
+                                placeholder="Paste list of names (one per line)&#10;e.g.&#10;Mario Rossi&#10;Giulia Bianchi"
+                                value={bulkGuestsText}
+                                onChange={e => setBulkGuestsText(e.target.value)}
+                                rows="4"
+                                className="w-full custom-scrollbar bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-neon-purple transition-colors resize-none"
+                            />
+
                             <button
-                                onClick={addGuest}
-                                disabled={!firstName || !lastName}
+                                onClick={handleAddBulk}
+                                disabled={!bulkGuestsText.trim()}
                                 className="w-full py-2 bg-white/5 hover:bg-neon-blue/20 text-neon-blue border border-neon-blue/20 rounded-lg text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 <Plus size={14} /> ADD TO LIST

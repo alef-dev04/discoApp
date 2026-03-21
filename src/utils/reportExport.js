@@ -47,7 +47,7 @@ export const exportToPDF = (reportData, selectedDate) => {
             ['Tavoli Prenotati', reportData.tables.length.toString()],
             ['Ospiti Totali', totalGuests.toString()],
             ['Ospiti Arrivati', totalArrived.toString()],
-            ['Ospiti Mancanti', totalMissing.toString()],
+            ['Ospiti non arrivati', totalMissing.toString()],
             ['Tasso di Arrivo', `${arrivalRate}%`]
         ],
         theme: 'striped',
@@ -78,7 +78,7 @@ export const exportToPDF = (reportData, selectedDate) => {
 
     autoTable(doc, {
         startY: finalY + 5,
-        head: [['Tavolo', 'Prenotazione', 'Prenotati', 'Arrivati', 'Mancanti', 'Tasso']],
+        head: [['Tavolo', 'Prenotazione', 'Prenotati', 'Arrivati', 'Non arrivati', 'Tasso']],
         body: tableData,
         theme: 'grid',
         headStyles: { fillColor: [59, 130, 246] },

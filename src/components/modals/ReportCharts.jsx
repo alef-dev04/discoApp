@@ -10,7 +10,7 @@ const ReportCharts = ({ reportData }) => {
     // Data for Pie Chart (Arrivals vs Missing)
     const pieData = [
         { name: 'Arrivati', value: totalArrived, color: '#10b981' },
-        { name: 'Mancanti', value: totalMissing, color: '#ef4444' }
+        { name: 'Non arrivati', value: totalMissing, color: '#ef4444' }
     ];
 
     // Data for Bar Chart (per table)
@@ -86,7 +86,7 @@ const ReportCharts = ({ reportData }) => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                <span className="text-xs text-gray-400">Mancanti: {totalMissing}</span>
+                                <span className="text-xs text-gray-400">Non arrivati: {totalMissing}</span>
                             </div>
                         </div>
                     </div>

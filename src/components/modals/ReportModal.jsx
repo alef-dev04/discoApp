@@ -111,7 +111,7 @@ const ReportModal = ({ isOpen, onClose, generateReport }) => {
                                         <div className="text-green-400 font-bold text-2xl">{totalArrived}</div>
                                     </div>
                                     <div className="bg-gradient-to-br from-red-500/20 to-red-500/5 p-4 rounded-xl border border-red-500/30">
-                                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Mancanti</p>
+                                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Non arrivati</p>
                                         <div className="text-red-400 font-bold text-2xl">{totalMissing}</div>
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@ const ReportModal = ({ isOpen, onClose, generateReport }) => {
                                                                 </p>
                                                             </div>
                                                             <div className="text-center p-2 bg-red-500/10 rounded-lg">
-                                                                <p className="text-[10px] text-gray-500 uppercase mb-1">Mancanti</p>
+                                                                <p className="text-[10px] text-gray-500 uppercase mb-1">Non arrivati</p>
                                                                 <p className="text-lg font-bold text-red-400 flex items-center justify-center gap-1">
                                                                     <XCircle size={14} />
                                                                     {missing}
