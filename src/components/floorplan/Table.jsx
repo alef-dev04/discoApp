@@ -1,8 +1,10 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Users } from 'lucide-react';
 
 const Table = ({ data, onClick, isUserView, isEditing, onDragEnd }) => {
     const { status, position, name, capacity, section } = data;
+    const isDragging = useRef(false);
 
     // Status definitions
     const getStatusColor = () => {
@@ -28,8 +30,18 @@ const Table = ({ data, onClick, isUserView, isEditing, onDragEnd }) => {
             // Use drag functionality only when editing
             drag={isEditing}
             dragMomentum={false}
-            onDragEnd={(event, info) => isEditing && onDragEnd && onDragEnd(data.id, info)}
-            onTap={() => onClick(data)}
+            onDragStart={() => isDragging.current = true}
+            onDragEnd={(event, info) => {
+                setTimeout(() => {
+                    isDragging.current = false;
+                }, 100);
+                if (isEditing && onDragEnd) onDragEnd(data.id, info);
+            }}
+            onTap={() => {
+                if (!isDragging.current) {
+                    onClick(data);
+                }
+            }}
             initial={{ scale: 0 }}
             animate={{ scale: 1, x: '-50%', y: '-50%' }} // Center the element using animate to avoid conflict
             whileHover={{ scale: 1.1, zIndex: 10 }}

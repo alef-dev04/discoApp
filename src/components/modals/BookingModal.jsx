@@ -41,7 +41,7 @@ const BookingModal = ({ isOpen, onClose, table, onConfirm }) => {
     };
 
     const totalPrice = guestList.length * table.pricePerPerson;
-    const finalPrice = Math.max(totalPrice, table.minSpend);
+    const finalPrice = totalPrice;
     const canConfirm = guestList.length > 0; // Just needs at least one person
     return (
         <AnimatePresence>

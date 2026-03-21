@@ -38,16 +38,19 @@ const EditBookingModal = ({ isOpen, onClose, booking }) => {
     const handleSave = async () => {
         setLoading(true);
         try {
+            const originalLength = booking.guest_list ? booking.guest_list.length : 0;
+            const difference = guestList.length - originalLength;
+            let newTotal = booking.total_price;
+            
+            if (table && table.pricePerPerson) {
+                newTotal += (difference * table.pricePerPerson);
+            }
+
             await updateBooking(booking.id, {
                 booking_name: bookingName,
                 guest_list: guestList,
                 guest_count: guestList.length,
-                // Optionally update price if needed, but usually price is fixed or deposit based?
-                // For now keeping price as is or we can recalculate:
-                // total_price: guestList.length * table.pricePerPerson 
-                // But let's assume price might have been paid or is fixed deposit. 
-                // If per person, we should update it.
-                total_price: table ? Math.max(guestList.length * table.pricePerPerson, table.minSpend) : booking.total_price
+                total_price: newTotal
             });
             onClose();
         } catch (error) {

@@ -262,15 +262,21 @@ export const AppProvider = ({ children }) => {
 
     const updateTable = async (id, updates) => {
         // Optimistic update
-        setTables(prev => prev.map(t =>
-            t.id === id ? { ...t, ...updates } : t
-        ));
-
-        // DB Update
-        // Map frontend keys to DB keys if necessary, but we are using DB keys in EditTableModal mostly
-        // Wait, EditTableModal sends: name, section, capacity_min, capacity_max, price_per_person, min_spend
-        // DB keys are: name, section, capacity_min, capacity_max, price_per_person, min_spend
-        // So we can pass `updates` directly.
+        setTables(prev => prev.map(t => {
+            if (t.id === id) {
+                return {
+                    ...t,
+                    ...updates,
+                    capacity: {
+                        min: updates.capacity_min !== undefined ? updates.capacity_min : t.capacity?.min,
+                        max: updates.capacity_max !== undefined ? updates.capacity_max : t.capacity?.max
+                    },
+                    pricePerPerson: updates.price_per_person !== undefined ? updates.price_per_person : t.pricePerPerson,
+                    minSpend: updates.min_spend !== undefined ? updates.min_spend : t.minSpend
+                };
+            }
+            return t;
+        }));
 
         const { error } = await supabase
             .from('tables')

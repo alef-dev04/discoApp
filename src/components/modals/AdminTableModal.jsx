@@ -32,12 +32,19 @@ const AdminTableModal = ({ isOpen, onClose, table, onAddOrder, onCancelBooking, 
 
         const updatedList = currentBooking.guest_list.filter(g => g.id !== guestId);
 
+        let newTotal = currentBooking.total;
+        if (table && table.pricePerPerson) {
+            newTotal -= table.pricePerPerson;
+        }
+
         await onUpdateBooking(currentBooking.id, {
             guest_list: updatedList,
             guest_count: updatedList.length,
-            // Optionally update total_price if it depends on count
+            total_price: newTotal
         });
     };
+
+
 
     const handleDeleteBooking = async () => {
         if (!confirm('Permanently delete this booking?')) return;
@@ -104,7 +111,9 @@ const AdminTableModal = ({ isOpen, onClose, table, onAddOrder, onCancelBooking, 
 
                         {/* Guest List */}
                         <div>
-                            <h3 className="text-sm font-bold text-gray-300 mb-3 uppercase tracking-wide">Guest List ({sortedGuests.length})</h3>
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wide">Guest List ({sortedGuests.length})</h3>
+                            </div>
                             <div className="bg-dark-bg border border-white/5 rounded-xl overflow-hidden">
                                 {!currentBooking ? (
                                     <div className="p-4 text-center text-gray-500 text-sm">No active booking</div>
