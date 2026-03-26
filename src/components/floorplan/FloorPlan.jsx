@@ -29,18 +29,63 @@ const FloorPlan = ({ tables, onTableClick, isUserView = true, isEditing = false,
             ref={containerRef}
             className={`w-full h-full relative bg-dark-deep rounded-3xl overflow-hidden border border-white/5 shadow-2xl group transition-colors ${isEditing ? 'border-yellow-500/30' : ''}`}
         >
-            {/* Grid Pattern Background */}
-            <div className="absolute inset-0 opacity-10"
-                style={{ backgroundImage: 'radial-gradient(circle at center, #ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
+            {/* CSS Blueprint Map Base */}
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-40 select-none overflow-hidden">
+                <div className="w-full h-full relative">
+
+                    {/* Top 3 Vertical Main Areas */}
+                    <div className="absolute top-0 left-0 w-[30%] h-[85%] border-b border-r border-white/60"></div>
+
+                    <div className="absolute top-0 left-[30%] w-[40%] h-[85%] border-b border-white/60 relative">
+                        {/* Console inside middle area */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[15%] border-b border-l border-r border-white/60 flex flex-col items-center justify-center bg-dark-deep/50">
+                            <span className="text-white/40 text-[8px] md:text-sm font-light tracking-[0.3em] pt-1">CONSOLE</span>
+                            {/* Small protruding box */}
+                            <div className="absolute -bottom-2 w-1/3 h-2 border-b border-l border-r border-white/40"></div>
+                        </div>
+                    </div>
+
+                    <div className="absolute top-0 right-0 w-[30%] h-[85%] border-b border-l border-white/60"></div>
+
+                    {/* Vertical Dividers for outer table columns */}
+                    <div className="absolute top-0 left-[11%] w-0 h-[85%] border-l border-white/60"></div>
+                    <div className="absolute top-0 right-[11%] w-0 h-[85%] border-r border-white/60"></div>
+
+                    {/* Corridor Horizontal Area */}
+                    <div className="absolute top-[85%] left-0 w-full h-[8%] border-b border-white/60">
+                    </div>
+
+                    {/* MO MA Area */}
+                    <div className="absolute top-[90%] left-[20%] w-[60%] h-[8%] border-b border-l border-r border-white/40 flex items-center justify-center relative">
+                        <span className="text-white/80 tracking-widest text-sm md:text-xl font-medium">MO</span>
+                        <svg className="w-5 h-5 md:w-6 md:h-6 text-white/50 mx-2 md:mx-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <span className="text-white/80 tracking-widest text-sm md:text-xl font-medium">MA</span>
+
+                        {/* Arrows pointing up */}
+                        <span className="absolute -bottom-6 -left-4 md:-left-8 text-white/40 text-[12px] md:text-sm">↑</span>
+                        <span className="absolute -bottom-6 -right-4 md:-right-8 text-white/40 text-[12px] md:text-sm">↑</span>
+                    </div>
+
+                    {/* Cambusa label */}
+                    <div className="absolute bottom-2 md:bottom-3 left-[20%] w-[60%] text-center">
+                        <span className="text-white/70 tracking-[0.4em] font-semibold italic text-[10px] md:text-base uppercase">CAMBUSA</span>
+                    </div>
+
+                    {/* Entrance (Bottom Right) */}
+                    <div className="absolute top-[84%] right-[4%] flex flex-col items-end">
+                        <div className="flex items-center gap-1">
+                            <svg className="w-10 h-6 md:w-16 md:h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.8" d="M4 12h16M4 12l4-4M4 12l4 4" />
+                            </svg>
+                        </div>
+                        <span className="text-white/50 tracking-[0.2em] text-[8px] md:text-[10px] uppercase font-bold pr-1">INGRESSO</span>
+                    </div>
+
+                </div>
             </div>
 
             {/* Ambient Glows */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-neon-purple/5 rounded-full blur-[100px]" />
-
-            {/* Stage / DJ Area Indicator */}
-            <div className="absolute top-2 md:top-5 left-1/2 -translate-x-1/2 w-28 h-8 md:w-48 md:h-12 bg-white/5 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm">
-                <span className="text-[8px] md:text-xs tracking-[0.3em] md:tracking-[0.5em] text-neon-blue font-bold">DJ BOOTH</span>
-            </div>
 
             {/* Tables Layer */}
             <div className="absolute inset-0">
@@ -57,28 +102,7 @@ const FloorPlan = ({ tables, onTableClick, isUserView = true, isEditing = false,
                 ))}
             </div>
 
-            {/* Legend (Bottom Left on mobile, Bottom Right on desktop) */}
-            <div className="absolute bottom-2 left-2 md:bottom-5 md:left-auto md:right-5 glass px-2 py-2 md:px-4 md:py-3 rounded-lg md:rounded-xl flex flex-col gap-1.5 md:gap-2">
-                <div className="flex items-center gap-1.5 md:gap-2">
-                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500/20 border border-green-500 box-glow-green" />
-                    <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Available</span>
-                </div>
-                <div className="flex items-center gap-1.5 md:gap-2">
-                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-900/40 border border-red-500" />
-                    <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Occupied</span>
-                </div>
-                {isUserView ? (
-                    <div className="flex items-center gap-1.5 md:gap-2">
-                        <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-neon-purple/20 border border-neon-purple box-glow-purple" />
-                        <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Your Table</span>
-                    </div>
-                ) : (
-                    <div className="flex items-center gap-1.5 md:gap-2">
-                        <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-orange-500/20 border border-orange-500" />
-                        <span className="text-[9px] md:text-[10px] uppercase text-gray-400">Partially Full</span>
-                    </div>
-                )}
-            </div>
+
 
             {/* Edit Mode Indicator */}
             {isEditing && (
