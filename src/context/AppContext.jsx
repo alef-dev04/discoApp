@@ -37,8 +37,34 @@ export const AppProvider = ({ children }) => {
         // Realtime Subscription
         const channel = supabase
             .channel('public:bookings')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, () => {
-                fetchBookings(tables, selectedDate); // Refresh bookings when DB changes
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, (payload) => {
+                setTables(prevTables => {
+                    const mappedNew = payload.new ? {
+                        ...payload.new,
+                        guests: payload.new.guest_count,
+                        total: payload.new.total_price
+                    } : null;
+
+                    if (payload.eventType === 'UPDATE') {
+                        return prevTables.map(t => ({
+                            ...t,
+                            bookings: t.bookings.map(b => b.id === payload.new.id ? { ...b, ...mappedNew } : b)
+                        }));
+                    } else if (payload.eventType === 'INSERT') {
+                        return prevTables.map(t => {
+                            if (t.id === payload.new.table_id) {
+                                return { ...t, status: 'occupied', bookings: [...t.bookings, mappedNew] };
+                            }
+                            return t;
+                        });
+                    } else if (payload.eventType === 'DELETE') {
+                        return prevTables.map(t => {
+                            const remaining = t.bookings.filter(b => b.id !== payload.old.id);
+                            return { ...t, status: remaining.length > 0 ? t.status : 'available', bookings: remaining };
+                        });
+                    }
+                    return prevTables;
+                });
             })
             .subscribe();
 
@@ -231,17 +257,55 @@ export const AppProvider = ({ children }) => {
     };
 
     const updateBooking = async (bookingId, updates) => {
+        // Trova la prenotazione che stiamo modificando per conoscerne il nome
+        let sourceBooking = null;
+        for (const t of tables) {
+            const b = t.bookings?.find(b => b.id === bookingId);
+            if (b) {
+                sourceBooking = b;
+                break;
+            }
+        }
+
+        let idsToUpdate = [bookingId];
+
+        // Se ha un nome, cerchiamo tutte le prenotazioni con lo stesso nome
+        if (sourceBooking && sourceBooking.booking_name) {
+            const matchingIds = [];
+            tables.forEach(t => {
+                t.bookings?.forEach(b => {
+                    // Confronto in minuscolo per sicurezza
+                    if (b.booking_name?.trim().toLowerCase() === sourceBooking.booking_name.trim().toLowerCase()) {
+                        matchingIds.push(b.id);
+                    }
+                });
+            });
+            
+            if (matchingIds.length > 0) {
+                idsToUpdate = matchingIds;
+            }
+        }
+
+        // Ottimismo dell'interfaccia: aggiorna subito i tavoli localmente!
+        setTables(prev => prev.map(t => ({
+            ...t,
+            bookings: t.bookings.map(b => 
+                idsToUpdate.includes(b.id) ? { ...b, ...updates } : b
+            )
+        })));
+
+        // Sincronizzazione in background con il database
         const { error } = await supabase
             .from('bookings')
             .update(updates)
-            .eq('id', bookingId);
+            .in('id', idsToUpdate);
 
         if (error) {
             console.error('Error updating booking:', error);
+            // Revert in case of error
+            fetchBookings(tables, selectedDate);
             throw error;
         }
-        // Refresh
-        fetchBookings(tables, selectedDate);
     };
 
     const updateTableStatus = async (tableId, newStatus) => {

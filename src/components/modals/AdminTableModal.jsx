@@ -10,7 +10,7 @@ const AdminTableModal = ({ isOpen, onClose, table, onAddOrder, onCancelBooking, 
         ? [...currentBooking.guest_list].sort((a, b) => {
             const nameA = (a.firstName || a.name || '').toLowerCase();
             const nameB = (b.firstName || b.name || '').toLowerCase();
-            return nameA.localeCompare(nameB);
+            return nameA.localeCompare(nameB, undefined, { numeric: true });
         })
         : [];
 

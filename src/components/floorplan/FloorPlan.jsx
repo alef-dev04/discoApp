@@ -39,9 +39,9 @@ const FloorPlan = ({ tables, onTableClick, isUserView = true, isEditing = false,
                     <div className="absolute top-0 left-[30%] w-[40%] h-[85%] border-b border-white/60 relative">
                         {/* Console inside middle area */}
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[15%] border-b border-l border-r border-white/60 flex flex-col items-center justify-center bg-dark-deep/50">
-                            <span className="text-white/40 text-[8px] md:text-sm font-light tracking-[0.3em] pt-1">CONSOLE</span>
+                            <span className="text-white/60 text-[8px] md:text-sm font-light tracking-[0.3em] pt-1">CONSOLE</span>
                             {/* Small protruding box */}
-                            <div className="absolute -bottom-2 w-1/3 h-2 border-b border-l border-r border-white/40"></div>
+                            <div className="absolute -bottom-2 w-1/3 h-2 border-b border-l border-r border-white/60"></div>
                         </div>
                     </div>
 
