@@ -4,7 +4,9 @@ import FloorPlan from '../components/floorplan/FloorPlan';
 import BookingModal from '../components/modals/BookingModal';
 import PersonalAreaModal from '../components/modals/PersonalAreaModal';
 import DateSelector from '../components/common/DateSelector';
-import { LogOut, Calendar } from 'lucide-react';
+import { LogOut, Calendar, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const UserView = () => {
     const { tables, bookTable, logout } = useAppContext();
@@ -24,6 +26,59 @@ const UserView = () => {
         // Could add a toast/confetti here
     };
 
+    const downloadListaCambusa = async () => {
+        try {
+            const doc = new jsPDF();
+
+            const img = new Image();
+            img.src = '/piantina_moma_pulita.png';
+
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = () => {
+                    console.warn("Immagine non trovata, continuo senza immagine");
+                    resolve();
+                };
+            });
+
+            let startY = 10;
+
+            if (img.width > 0) {
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const margin = 10;
+                const imgWidth = pageWidth - (margin * 2);
+                const imgHeight = (img.height * imgWidth) / img.width;
+
+                doc.addImage(img, 'PNG', margin, margin, imgWidth, imgHeight);
+                startY = margin + imgHeight + 10;
+            }
+
+            doc.setFontSize(16);
+            doc.text("Lista Cambusa", 10, startY);
+
+            const tableData = tables.map(t => {
+                let bookingName = "";
+                if (t.bookings && t.bookings.length > 0 && t.bookings[0].booking_name) {
+                    bookingName = t.bookings[0].booking_name;
+                }
+                return [t.name || `Tavolo ${t.id}`, bookingName];
+            });
+
+            autoTable(doc, {
+                startY: startY + 5,
+                head: [['Tavolo', 'Nome Prenotazione']],
+                body: tableData,
+                theme: 'grid',
+                headStyles: { fillColor: [138, 43, 226] },
+            });
+
+            doc.save("lista_cambusa.pdf");
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            alert("Errore durante la generazione del PDF");
+        }
+    };
+
     return (
         <div className="h-screen flex flex-col bg-dark-bg text-white overflow-hidden relative">
             {/* Header */}
@@ -40,10 +95,25 @@ const UserView = () => {
                     </div>
 
                     <button
+                        onClick={downloadListaCambusa}
+                        className="hidden md:flex items-center gap-2 bg-blue-500/10 hover:bg-blue-500/20 px-4 py-2 rounded-lg border border-blue-500/20 transition-all text-blue-400"
+                    >
+                        <FileText size={16} />
+                        <span className="font-bold text-sm whitespace-nowrap">LISTA CAMBUSA</span>
+                    </button>
+
+                    <button
+                        onClick={downloadListaCambusa}
+                        className="md:hidden flex items-center justify-center bg-blue-500/10 hover:bg-blue-500/20 p-2 rounded-lg border border-blue-500/20 transition-all text-blue-400"
+                    >
+                        <FileText size={16} />
+                    </button>
+
+                    <button
                         onClick={() => setIsPersonalAreaOpen(true)}
                         className="hidden md:flex items-center gap-2 bg-neon-purple/10 hover:bg-neon-purple/20 px-4 py-2 rounded-lg border border-neon-purple/20 transition-all"
                     >
-                        <span className="font-bold text-neon-purple text-sm">MY BOOKINGS</span>
+                        <span className="font-bold text-neon-purple text-sm whitespace-nowrap">MY BOOKINGS</span>
                     </button>
 
                     {/* Mobile: My Bookings Icon Button */}
